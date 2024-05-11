@@ -3,20 +3,19 @@
 #include <pthread.h>
 #include <unistd.h>
 
-typedef struct time{
-  int qtdJogosJogados;
-  char *nome;
-  
-  struct saldo{
+typedef struct saldo{
     int vitoria;
     int derrota;
     int empate;
     int qtdGol;
-  }saldo;
+}Saldo;
 
+typedef struct time{
+  int qtdJogosJogados;
+  char *nome;
+  Saldo saldo;
   int pontuacao;
   int *timesJogados;
-
   pthread_mutex_t mutex_pont;
   pthread_t threadTime;
 } Time;
