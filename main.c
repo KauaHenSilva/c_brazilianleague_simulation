@@ -3,8 +3,7 @@
 #include <pthread.h>
 #include <unistd.h>
 
-typedef struct time
-{
+typedef struct time{
   int qtdJogosJogados;
   char *nome;
   int pontuacao;
@@ -18,14 +17,12 @@ typedef struct time
 Time *times;
 int jogosCoordenados[QTD_TIME][QTD_TIME] = {0};
 
-void *threadTime(void *arg)
-{
+void *threadTime(void *arg){
   int *idx = (int *)arg;
 
   pthread_mutex_lock(&times[*idx].mutex_pont);
 
-  for (int x = 0; x < QTD_TIME; x++)
-  {
+  for (int x = 0; x < QTD_TIME; x++){
     if (*idx == x || jogosCoordenados[*idx][x] || jogosCoordenados[x][*idx])
       continue;
 
@@ -39,7 +36,7 @@ void *threadTime(void *arg)
     times[*idx].pontuacao += 1;
 
     printf("Time %02d ganhou de %02d\n", *idx, x);
-    // usleep(100000); // Adiciona um pequeno atraso para simular o jogo
+    usleep(100000); // Adiciona um pequeno atraso para simular o jogo
   }
 
   pthread_mutex_unlock(&times[*idx].mutex_pont);
@@ -48,12 +45,10 @@ void *threadTime(void *arg)
   return NULL;
 }
 
-int main()
-{
+int main(){
   times = (Time *)malloc(sizeof(Time) * QTD_TIME);
 
-  for (int x = 0; x < QTD_TIME; x++)
-  {
+  for (int x = 0; x < QTD_TIME; x++){
     int *aux = (int *)malloc(sizeof(int));
     *aux = x;
 
@@ -68,12 +63,13 @@ int main()
   for (int x = 0; x < QTD_TIME; x++)
     pthread_join(times[x].threadTime, NULL);
 
-  for (int x = 0; x < QTD_TIME; x++)
-  {
+  for (int x = 0; x < QTD_TIME; x++){
+    
     printf("Time %d: %d\n", x, times[x].pontuacao);
     printf("Time %d jogou %d jogos\n", x, times[x].qtdJogosJogados);
     pthread_mutex_destroy(&times[x].mutex_pont);
     free(times[x].timesJogados);
+
   }
 
   free(times);
