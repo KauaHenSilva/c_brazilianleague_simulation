@@ -7,6 +7,7 @@
 #include "threads/threads.c"
 #include "printResult/printResult.c"
 
+
 int main()
 {
   defTimes();
@@ -17,6 +18,5 @@ int main()
   printTable();
 
   freeTimes();
-
   return 0;
 }
