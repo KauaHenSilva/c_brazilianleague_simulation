@@ -3,20 +3,19 @@
 #include <pthread.h>
 #include <unistd.h>
 
-typedef struct time{
-  int qtdJogosJogados;
-  char *nome;
-  
-  struct saldo{
+typedef struct saldo{
     int vitoria;
     int derrota;
     int empate;
     int qtdGol;
-  }saldo;
+}Saldo;
 
+typedef struct time{
+  int qtdJogosJogados;
+  char *nome;
+  Saldo saldo;
   int pontuacao;
   int *timesJogados;
-
   pthread_mutex_t mutex_pont;
   pthread_t threadTime;
 } Time;
@@ -47,6 +46,15 @@ void *threadTime(void *arg){
     if(num == 0){
       printf("Time %02d ganhou de %02d\n", *idx, x);
       times[*idx].saldo.vitoria += 1;
+      times[x].saldo.derrota += 1;
+    }else if(num == 1){
+      printf("Time %02d empate de %02d\n", *idx, x);
+      times[*idx].saldo.empate += 1;
+      times[x].saldo.empate += 1;
+    }else{
+      printf("Time %02d derrota de %02d\n", *idx, x);
+      times[*idx].saldo.derrota += 1;
+      times[x].saldo.vitoria += 1;
     }else if(num == 1){
       printf("Time %02d empate de %02d\n", *idx, x);
       times[*idx].saldo.empate += 1;
@@ -100,11 +108,15 @@ int main(){
   pontuacao();
 
   qsort(times,QTD_TIME,sizeof(Time), comparetime);
-
+  printf("Nome \t P \t V \t E \t D \t J\n");
   for (int x = 0; x < QTD_TIME; x++){
+    printf(
+      "%02d \t %02d \t %02d \t %02d \t %02d \t %02d \n", 
+      x, times[x].pontuacao, 
+      times[x].saldo.vitoria, times[x].saldo.empate,times[x].saldo.derrota,
+      times[x].qtdJogosJogados
+    );
     
-    printf("Time %d: %d\n", x, times[x].pontuacao);
-    printf("Time %d jogou %d jogos\n", x, times[x].qtdJogosJogados);
     pthread_mutex_destroy(&times[x].mutex_pont);
     free(times[x].timesJogados);
 
