@@ -65,7 +65,7 @@ void *threadTime(void *arg){
       times[*idx].qtdJogosJogados += 1;
       times[x].qtdJogosJogados += 1;
 
-      // usleep(100000); // Adiciona um pequeno atraso para simular o jogo
+      usleep(100000); // Adiciona um pequeno atraso para simular o jogo
     }
   }
 
