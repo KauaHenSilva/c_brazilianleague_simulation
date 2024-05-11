@@ -1,20 +1,20 @@
-Athletico_PR
-Atlético_MG
-Atlético-GO
+Athletico-PR
+Atletico-MG
+Atletico-GO
 Botafogo
 Bragantino
 Cruzeiro
-Cuiabá
-Criciúma
+Cuiaba
+Criciuma
 Corinthians
 Palmeiras
-São_Paulo
+Sao Paulo
 Bahia
 Flamengo
 Fortaleza
 Fluminense
 Internacional
-Grêmio
+Gremio
 Juventude
 Vasco
 Vitória
