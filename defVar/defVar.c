@@ -40,7 +40,7 @@ void defTimes()
 {
   times = (Time *)malloc(sizeof(Time) * QTD_TIME);
 
-  FILE *arq = fopen("/home/user/c_brazileirao_simulition_100_br_desuatualizado_original_bombapet_2022/times.txt", "r");
+  FILE *arq = fopen("../times.txt", "r");
   if (!arq)
     perror("Error ao abrir o arquivo");
 
