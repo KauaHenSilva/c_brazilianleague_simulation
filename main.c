@@ -55,6 +55,12 @@ void *threadTime(void *arg){
       printf("Time %02d derrota de %02d\n", *idx, x);
       times[*idx].saldo.derrota += 1;
       times[x].saldo.vitoria += 1;
+    }else if(num == 1){
+      printf("Time %02d empate de %02d\n", *idx, x);
+      times[*idx].saldo.empate += 1;
+    }else{
+      printf("Time %02d derrota de %02d\n", *idx, x);
+      times[*idx].saldo.derrota += 1;
     }
     usleep(100000); // Adiciona um pequeno atraso para simular o jogo
   }
@@ -110,6 +116,7 @@ int main(){
       times[x].saldo.vitoria, times[x].saldo.empate,times[x].saldo.derrota,
       times[x].qtdJogosJogados
     );
+    
     pthread_mutex_destroy(&times[x].mutex_pont);
     free(times[x].timesJogados);
 
