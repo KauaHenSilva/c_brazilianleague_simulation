@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <pthread.h>
 #include <unistd.h>
 
@@ -20,19 +21,44 @@ typedef struct time{
   pthread_t threadTime;
 } Time;
 
+typedef struct rodada{
+  int n;
+  char **jogo;
+}Rodada;
+
+
 #define QTD_TIME 20
+#define QTD_RODADA 19
+#define QTD_JOGO 10
 
 Time *times;
+Rodada *rodada;
+
+void exibirRodada(){
+  rodada = (Rodada*)calloc(sizeof(Rodada), QTD_TIME);
+
+  for(int i=0;i<QTD_RODADA;i++){
+
+    printf("\n----------Rodada %02d----------\n", i+1);
+
+    for(int i=0;i<QTD_RODADA;i++)
+      for(int j=0;j<QTD_JOGO;j++)
+        printf("%s\n", rodada[i].jogo[j]);
+  }
+  free(rodada);
+}
+
 int jogosCoordenados[QTD_TIME][QTD_TIME][2] = {0};
 
 void *threadTime(void *arg){
   int *idx = (int *)arg;
-
+  
   pthread_mutex_lock(&times[*idx].mutex_pont);
 
   for (int i = 0; i < 2; i++){
-
+    printf("Fase %d", i+1);
     for (int x = 0; x < QTD_TIME; x++){
+
       if (*idx == x || jogosCoordenados[*idx][x][i] || jogosCoordenados[x][*idx][i])
         continue;
     
@@ -41,7 +67,18 @@ void *threadTime(void *arg){
 
       times[*idx].timesJogados[x] = 1;
 
+      /*
+      Erro na lógica
+      */
+      // char temp[20] = {times[*idx].nome[*idx]};
+
+      // strcat(temp," x ");
+      // strcat(temp,times[x].nome);
+      
+      // strcpy(rodada[x].jogo[0],temp);
+
       int num = rand() % 3;  
+      
       if(num == 0){
         
         printf("Time %02d ganhou de %02d\n", *idx, x);
@@ -70,7 +107,7 @@ void *threadTime(void *arg){
   }
 
   pthread_mutex_unlock(&times[*idx].mutex_pont);
-
+  
   free(idx);
   return NULL;
 }
@@ -92,6 +129,14 @@ void pontuacao(){
 int main(){
   times = (Time *)malloc(sizeof(Time) * QTD_TIME);
   
+  rodada = (Rodada*)calloc(sizeof(Rodada), QTD_RODADA);
+
+  for(int i=0;i<QTD_RODADA;i++){
+    rodada[i].jogo = (char**)calloc(sizeof(char*),QTD_JOGO);
+    for(int j=0;j<QTD_JOGO;j++)
+      rodada[i].jogo[j] = (char*)calloc(sizeof(char),10);
+  }
+
   FILE*arq = fopen("../times.txt", "r");
   if(!arq){
     printf("Nao consegui abrir");
@@ -138,6 +183,15 @@ int main(){
     pthread_mutex_destroy(&times[x].mutex_pont);
     free(times[x].timesJogados);
   }
+
+  for(int i=0;i<QTD_RODADA;i++){
+    for(int x=0; x < QTD_JOGO; x++)
+      free(rodada[i].jogo[x]);
+    free(rodada[i].jogo);
+  }
+  
+  free(rodada);
+
   for(int x=0; x < QTD_TIME; x++)
     free(times[x].nome);
   free(times);
