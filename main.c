@@ -14,9 +14,10 @@ typedef struct time
 #define QTD_TIME 20
 
 Time *times;
-
-void *threadTime(void *arg)
-{
+/*
+Thread Time
+*/
+void *threadTime(void *arg){
   int *idx = (int *)arg;
 
   for (int x = 0; x < QTD_TIME; x++)
