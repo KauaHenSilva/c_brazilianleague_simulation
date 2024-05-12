@@ -27,10 +27,13 @@ void *threadTime(void *arg)
 
       times[*idx].timesJogados[x] = 1;
 
-      int golsTimeA = rand() % 5; 
-      int golsTimeB = rand() % 5; 
-   
-      printf("| %-15s | %5d X %-5d | %-15s |\n", times[*idx].nome, golsTimeA, golsTimeB, times[x].nome);
+      int golsTimeA = rand() % 5;
+      int golsTimeB = rand() % 5;
+
+      printf(
+          "├─────────────────┼─────────────────┼─────────────────┼─────────────────│\n│ %-15s │ %15d X %-15d │ %15s │\n├─────────────────┼─────────────────┼─────────────────┼─────────────────│\n",
+          times[*idx].nome, golsTimeA,
+          golsTimeB, times[x].nome);
 
       if (golsTimeA > golsTimeB)
       {
@@ -69,7 +72,7 @@ void *threadTime(void *arg)
 
 void runThreadTime()
 {
-
+  printf("┌─────────────────┬─────────────────┬─────────────────┬─────────────────┐\n");
   for (int x = 0; x < QTD_TIME; x++)
   {
     int *aux = (int *)malloc(sizeof(int));
@@ -82,4 +85,6 @@ void joinThreadTime()
 {
   for (int x = 0; x < QTD_TIME; x++)
     pthread_join(times[x].threadTime, NULL);
+
+  printf("└─────────────────┴─────────────────┴─────────────────┴─────────────────┘\n");
 }

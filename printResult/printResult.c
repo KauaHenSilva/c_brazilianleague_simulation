@@ -21,20 +21,17 @@ void printTable()
 {
   pontuacao();
   qsort(times, QTD_TIME, sizeof(Time), comparetime);
-printf("┌───────────────┬──────────┬──────────┬─────────┬──────────┬──────┬───────┐\n");
-printf("│    Nome       │  PONTOS  │ VITÓRIAS │ EMPATES │ DERROTAS │ GOLS │ JOGOS │\n");
-printf("├───────────────┼──────────┼──────────┼─────────┼──────────┼──────┼───────┤\n");
-for (int x = 0; x < QTD_TIME; x++)
-  printf("│ %-13.13s │ %8d │ %8d │ %7d │ %8d │ %4d │ %5d │\n",
-       times[x].nome, times[x].pontuacao,
-       times[x].saldo.vitoria, times[x].saldo.empate, times[x].saldo.derrota,
-       times[x].saldo.qtdGol, times[x].qtdJogosJogados);
-printf("└───────────────┴──────────┴──────────┴─────────┴──────────┴──────┴───────┘\n");
-
-
-
-
-
-
-
+  printf("┌───────────────┬──────────┬──────────┬─────────┬──────────┬──────┬───────┐\n│    Nome       │  PONTOS  │ VITÓRIAS │ EMPATES │ DERROTAS │ GOLS │ JOGOS │\n├───────────────┼──────────┼──────────┼─────────┼──────────┼──────┼───────┤\n");
+  for (int x = 0; x < QTD_TIME; x++)
+  {
+    printf("│ %-13.13s │ %8d │ %8d │ %7d │ %8d │ %4d │ %5d │\n",
+           times[x].nome,
+           times[x].pontuacao,
+           times[x].saldo.vitoria,
+           times[x].saldo.empate,
+           times[x].saldo.derrota,
+           times[x].saldo.qtdGol,
+           times[x].qtdJogosJogados);
+  }
+  printf("└───────────────┴──────────┴──────────┴─────────┴──────────┴──────┴───────┘\n");
 }
