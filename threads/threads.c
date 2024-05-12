@@ -27,26 +27,31 @@ void *threadTime(void *arg)
 
       times[*idx].timesJogados[x] = 1;
 
-      int num = rand() % 3;
-      if (num == 0)
-      {
-        printf("Time %s ganhou de %s\n", times[*idx].nome, times[x].nome);
-        times[*idx].saldo.vitoria += 1;
-        times[x].saldo.derrota += 1;
-      }
-      else if (num == 1)
-      {
+      int golsTimeA = rand() % 5; 
+      int golsTimeB = rand() % 5; 
+   
+      printf("| %-15s | %5d X %-5d | %-15s |\n", times[*idx].nome, golsTimeA, golsTimeB, times[x].nome);
 
-        printf("Time %02d empate de %02d\n", *idx, x);
-        times[*idx].saldo.empate += 1;
-        times[x].saldo.empate += 1;
+      if (golsTimeA > golsTimeB)
+      {
+        times[*idx].saldo.vitoria += 1;
+        times[*idx].saldo.qtdGol += golsTimeA;
+        times[x].saldo.derrota += 1;
+        times[x].saldo.qtdGol += golsTimeB;
+      }
+      else if (golsTimeA < golsTimeB)
+      {
+        times[*idx].saldo.derrota += 1;
+        times[*idx].saldo.qtdGol += golsTimeA;
+        times[x].saldo.vitoria += 1;
+        times[x].saldo.qtdGol += golsTimeB;
       }
       else
       {
-
-        printf("Time %02d derrota de %02d\n", *idx, x);
-        times[*idx].saldo.derrota += 1;
-        times[x].saldo.vitoria += 1;
+        times[*idx].saldo.empate += 1;
+        times[*idx].saldo.qtdGol += golsTimeA;
+        times[x].saldo.empate += 1;
+        times[x].saldo.qtdGol += golsTimeB;
       }
 
       times[*idx].qtdJogosJogados += 1;
