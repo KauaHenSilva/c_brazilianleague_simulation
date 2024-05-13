@@ -40,20 +40,21 @@ void *threadTime(void *arg)
         times[*idx].saldo.vitoria += 1;
         times[*idx].saldo.qtdGol += golsTimeA;
         times[x].saldo.derrota += 1;
-        times[x].saldo.qtdGol += golsTimeB;
+        times[x].saldo.qtdGol -= golsTimeA;
       }
-      else if (golsTimeA < golsTimeB)
+      else if (golsTimeA == golsTimeB)
       {
-        times[*idx].saldo.derrota += 1;
+              times[*idx].saldo.empate += 1;
         times[*idx].saldo.qtdGol += golsTimeA;
-        times[x].saldo.vitoria += 1;
+        times[x].saldo.empate += 1;
         times[x].saldo.qtdGol += golsTimeB;
+
       }
       else
       {
-        times[*idx].saldo.empate += 1;
-        times[*idx].saldo.qtdGol += golsTimeA;
-        times[x].saldo.empate += 1;
+        times[*idx].saldo.derrota += 1;
+        times[*idx].saldo.qtdGol -= golsTimeB;
+        times[x].saldo.vitoria += 1;
         times[x].saldo.qtdGol += golsTimeB;
       }
 
