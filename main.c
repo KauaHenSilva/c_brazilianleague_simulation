@@ -4,198 +4,20 @@
 #include <pthread.h>
 #include <unistd.h>
 
-typedef struct saldo{
-    int vitoria;
-    int derrota;
-    int empate;
-    int qtdGol;
-}Saldo;
-
-typedef struct time{
-  int qtdJogosJogados;
-  char *nome;
-  Saldo saldo;
-  int pontuacao;
-  int *timesJogados;
-  pthread_mutex_t mutex_pont;
-  pthread_t threadTime;
-} Time;
-
-typedef struct rodada{
-  int n;
-  char **jogo;
-}Rodada;
+#include "defVar/defVar.c"
+#include "threads/threads.c"
+#include "printResult/printResult.c"
 
 
-#define QTD_TIME 20
-#define QTD_RODADA 19
-#define QTD_JOGO 10
+int main()
+{
+  defTimes();
 
-Time *times;
-Rodada *rodada;
+  runThreadTime();
+  joinThreadTime();
 
-void exibirRodada(){
-  rodada = (Rodada*)calloc(sizeof(Rodada), QTD_TIME);
+  printTable();
 
-  for(int i=0;i<QTD_RODADA;i++){
-
-    printf("\n----------Rodada %02d----------\n", i+1);
-
-    for(int i=0;i<QTD_RODADA;i++)
-      for(int j=0;j<QTD_JOGO;j++)
-        printf("%s\n", rodada[i].jogo[j]);
-  }
-  free(rodada);
-}
-
-int jogosCoordenados[QTD_TIME][QTD_TIME][2] = {0};
-
-void *threadTime(void *arg){
-  int *idx = (int *)arg;
-  
-  pthread_mutex_lock(&times[*idx].mutex_pont);
-
-  for (int i = 0; i < 2; i++){
-    printf("Fase %d", i+1);
-    for (int x = 0; x < QTD_TIME; x++){
-
-      if (*idx == x || jogosCoordenados[*idx][x][i] || jogosCoordenados[x][*idx][i])
-        continue;
-    
-      jogosCoordenados[*idx][x][i] = 1;
-      jogosCoordenados[x][*idx][i] = 1;
-
-      times[*idx].timesJogados[x] = 1;
-
-      /*
-      Erro na lógica
-      */
-      // char temp[20] = {times[*idx].nome[*idx]};
-
-      // strcat(temp," x ");
-      // strcat(temp,times[x].nome);
-      
-      // strcpy(rodada[x].jogo[0],temp);
-
-      int num = rand() % 3;  
-      
-      if(num == 0){
-        
-        printf("Time %02d ganhou de %02d\n", *idx, x);
-        times[*idx].saldo.vitoria += 1;
-        times[x].saldo.derrota += 1;
-
-      }else if(num == 1){
-        
-        printf("Time %02d empate de %02d\n", *idx, x);
-        times[*idx].saldo.empate += 1;
-        times[x].saldo.empate += 1;
-      
-      }else{
-      
-        printf("Time %02d derrota de %02d\n", *idx, x);
-        times[*idx].saldo.derrota += 1;
-        times[x].saldo.vitoria += 1;
-      
-      }
-      
-      times[*idx].qtdJogosJogados += 1;
-      times[x].qtdJogosJogados += 1;
-
-      usleep(100000); // Adiciona um pequeno atraso para simular o jogo
-    }
-  }
-
-  pthread_mutex_unlock(&times[*idx].mutex_pont);
-  
-  free(idx);
-  return NULL;
-}
-
-int comparetime(const void* a,const void* b){
-  Time *teamA = (Time *)a;
-  Time *teamB = (Time *)b;
-
-  return (teamB->pontuacao - teamA->pontuacao);
-}
-
-void pontuacao(){
-  for(int i=0;i<QTD_TIME;i++){
-    times[i].pontuacao += (times[i].saldo.vitoria * 3);
-    times[i].pontuacao += times[i].saldo.empate;
-  }
-}
-
-int main(){
-  times = (Time *)malloc(sizeof(Time) * QTD_TIME);
-  
-  rodada = (Rodada*)calloc(sizeof(Rodada), QTD_RODADA);
-
-  for(int i=0;i<QTD_RODADA;i++){
-    rodada[i].jogo = (char**)calloc(sizeof(char*),QTD_JOGO);
-    for(int j=0;j<QTD_JOGO;j++)
-      rodada[i].jogo[j] = (char*)calloc(sizeof(char),10);
-  }
-
-  FILE*arq = fopen("../times.txt", "r");
-  if(!arq){
-    printf("Nao consegui abrir");
-    exit(1);
-  }
-
-  for (int x = 0; x < QTD_TIME; x++){
-    int *aux = (int *)malloc(sizeof(int));
-    *aux = x;
-
-    times[x].nome = (char*)calloc(sizeof(char), 15);
-    
-    fscanf(arq,"%[^\n]\n", times[x].nome);
-
-    times[x].qtdJogosJogados = 0;
-    times[x].saldo.vitoria = times[x].saldo.empate =  times[x].saldo.derrota = 0;
-    times[x].saldo.qtdGol = times[x].pontuacao = 0;
-    
-    times[x].timesJogados = (int *)calloc(QTD_TIME, sizeof(int));
-    pthread_mutex_init(&times[x].mutex_pont, NULL);
-
-    pthread_create(&times[x].threadTime, NULL, &threadTime, (void *)aux);
-  }
-
-  fclose(arq);
-  
-  for (int x = 0; x < QTD_TIME; x++)
-    pthread_join(times[x].threadTime, NULL);
-
-  pontuacao();
-
-  qsort(times,QTD_TIME,sizeof(Time), comparetime);
-
-  printf("%-11s \t P \t V \t E \t D \t J\n", "Nome");
-  for (int x = 0; x < QTD_TIME; x++){
-
-    printf(
-      "%-11s \t %02d \t %02d \t %02d \t %02d \t %02d \n", 
-      times[x].nome, times[x].pontuacao, 
-      times[x].saldo.vitoria, times[x].saldo.empate,times[x].saldo.derrota,
-      times[x].qtdJogosJogados
-    );
-
-    pthread_mutex_destroy(&times[x].mutex_pont);
-    free(times[x].timesJogados);
-  }
-
-  for(int i=0;i<QTD_RODADA;i++){
-    for(int x=0; x < QTD_JOGO; x++)
-      free(rodada[i].jogo[x]);
-    free(rodada[i].jogo);
-  }
-  
-  free(rodada);
-
-  for(int x=0; x < QTD_TIME; x++)
-    free(times[x].nome);
-  free(times);
-
-
+  freeTimes();
   return 0;
 }
