@@ -27,26 +27,35 @@ void *threadTime(void *arg)
 
       times[*idx].timesJogados[x] = 1;
 
-      int num = rand() % 3;
-      if (num == 0)
-      {
-        printf("Time %s ganhou de %s\n", times[*idx].nome, times[x].nome);
-        times[*idx].saldo.vitoria += 1;
-        times[x].saldo.derrota += 1;
-      }
-      else if (num == 1)
-      {
+      int golsTimeA = rand() % 5;
+      int golsTimeB = rand() % 5;
 
-        printf("Time %02d empate de %02d\n", *idx, x);
-        times[*idx].saldo.empate += 1;
+      printf(
+          "├─────────────────┼─────────────────┼─────────────────┼─────────────────│\n│ %-15s │ %15d X %-15d │ %15s │\n├─────────────────┼─────────────────┼─────────────────┼─────────────────│\n",
+          times[*idx].nome, golsTimeA,
+          golsTimeB, times[x].nome);
+
+      if (golsTimeA > golsTimeB)
+      {
+        times[*idx].saldo.vitoria += 1;
+        times[*idx].saldo.qtdGol += golsTimeA;
+        times[x].saldo.derrota += 1;
+        times[x].saldo.qtdGol -= golsTimeA;
+      }
+      else if (golsTimeA == golsTimeB)
+      {
+              times[*idx].saldo.empate += 1;
+        times[*idx].saldo.qtdGol += golsTimeA;
         times[x].saldo.empate += 1;
+        times[x].saldo.qtdGol += golsTimeB;
+
       }
       else
       {
-
-        printf("Time %02d derrota de %02d\n", *idx, x);
         times[*idx].saldo.derrota += 1;
+        times[*idx].saldo.qtdGol -= golsTimeB;
         times[x].saldo.vitoria += 1;
+        times[x].saldo.qtdGol += golsTimeB;
       }
 
       times[*idx].qtdJogosJogados += 1;
@@ -64,7 +73,7 @@ void *threadTime(void *arg)
 
 void runThreadTime()
 {
-
+  printf("┌─────────────────┬─────────────────┬─────────────────┬─────────────────┐\n");
   for (int x = 0; x < QTD_TIME; x++)
   {
     int *aux = (int *)malloc(sizeof(int));
@@ -77,4 +86,6 @@ void joinThreadTime()
 {
   for (int x = 0; x < QTD_TIME; x++)
     pthread_join(times[x].threadTime, NULL);
+
+  printf("└─────────────────┴─────────────────┴─────────────────┴─────────────────┘\n");
 }
