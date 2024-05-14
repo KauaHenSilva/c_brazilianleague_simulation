@@ -9,8 +9,7 @@
 #include "printResult/printResult.c"
 
 
-int main()
-{
+int main(){
   defTimes();
 
   runThreadTime();

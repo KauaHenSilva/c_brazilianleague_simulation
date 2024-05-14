@@ -46,7 +46,7 @@ void defTimes()
 
   for (int x = 0; x < QTD_TIME; x++)
   {
-    fscanf(arq, "%s", times[x].nome);
+    fscanf(arq, "%[^\n]\n", times[x].nome);
 
     times[x].qtdJogosJogados = 0;
     times[x].saldo.vitoria = times[x].saldo.empate = times[x].saldo.derrota = 0;
