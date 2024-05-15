@@ -14,8 +14,7 @@ void *threadTime(void *arg){
     for (int i = 0; i < 2; i++){
         for (int x = 0; x < QTD_TIME; x++){
 
-            pthread_barrier_wait(&barrier_pont);
-            
+
             if (*idx == x || jogosCoordenados[*idx][x][i] || jogosCoordenados[x][*idx][i])
                 continue;
 
@@ -52,10 +51,13 @@ void *threadTime(void *arg){
             times[*idx].qtdJogosJogados += 1;
             times[x].qtdJogosJogados += 1;
 
+
             sleep(1);
         }
 
     }
+    
+    pthread_barrier_wait(&barrier_pont);
 
     free(idx);
 
