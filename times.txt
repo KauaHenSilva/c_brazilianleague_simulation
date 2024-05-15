@@ -1,5 +1,5 @@
-Athletico_PR
-Atletico_MG
+Athletico-PR
+Atletico-MG
 Atletico-GO
 Botafogo
 Bragantino
@@ -8,7 +8,7 @@ Cuiaba
 Criciuma
 Corinthians
 Palmeiras
-Sao_Paulo
+Sao Paulo
 Bahia
 Flamengo
 Fortaleza
