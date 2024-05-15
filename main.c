@@ -4,8 +4,6 @@
 #include <pthread.h>
 #include <unistd.h>
 
-
-
 #include "defVar/defVar.c"
 #include "threads/threads.c"
 #include "printResult/printResult.c"

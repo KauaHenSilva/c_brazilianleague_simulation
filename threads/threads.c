@@ -13,6 +13,7 @@ void *threadTime(void *arg){
     
     for (int i = 0; i < 2; i++){
         for (int x = 0; x < QTD_TIME; x++){
+
             pthread_barrier_wait(&barrier_pont);
             
             if (*idx == x || jogosCoordenados[*idx][x][i] || jogosCoordenados[x][*idx][i])
@@ -73,7 +74,6 @@ void runThreadTime(){
             perror("Erro ao criar a thread");
 
     }
-
 }
 
 void joinThreadTime(){
