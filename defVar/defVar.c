@@ -34,7 +34,6 @@ int jogosCoordenados[QTD_TIME][QTD_TIME][2] = {0};
 pthread_barrier_t barrier_pont;
 #endif
 
-
 void defTimes(){
     times = (Time *)malloc(sizeof(Time) * QTD_TIME);
 

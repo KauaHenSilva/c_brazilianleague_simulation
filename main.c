@@ -9,15 +9,15 @@
 #include "printResult/printResult.c"
 
 int main(){
-  
-  defTimes();
 
-  runThreadTime();
-  joinThreadTime();
+    defTimes();
 
-  printTable();
+    runThreadTime();
+    joinThreadTime();
 
-  freeTimes();
+    printTable();
 
-  return 0;
+    freeTimes();
+
+    return 0;
 }
